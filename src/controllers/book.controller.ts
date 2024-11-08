@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import Book from "../models/book.model";
+import * as BookService from "../services/book.service"; // import fungsi dari service
 
 // Read
 export const getAllBooks = async (req: Request, res: Response) => {
 	try {
-		const books = await Book.find();
+		const books = await BookService.getAllBooks(); // panggil service
 		res.json({ status: "success", message: "Successfully get all books", data: books });
 	} catch (error) {
 		res.status(500).json({ status: "error", message: "Error getting books" });
@@ -21,7 +21,7 @@ export const getBookById = async (req: Request, res: Response): Promise<Response
 	}
 
 	try {
-		const book = await Book.findById(bookId); // Gunakan bookId langsung di sini
+		const book = await BookService.getBookById(bookId); // panggil service
 		if (!book) {
 			return res.status(404).json({ status: "failed", message: "Book not found" });
 		}
@@ -54,21 +54,8 @@ export const addNewBook = async (req: Request, res: Response): Promise<Response>
 	}
 
 	try {
-		const newBook = new Book({
-			title,
-			author,
-			publishedDate,
-			publisher,
-			description,
-			coverImage,
-			rating,
-			tags,
-			initialQty,
-			qty,
-		});
-
-		const savedBook = await newBook.save();
-		return res.status(201).json({ status: "success", message: "Successfully add book", data: savedBook });
+		const newBook = await BookService.addNewBook({ title, author, publishedDate, publisher, description, coverImage, rating, tags, initialQty, qty }); // panggil service
+		return res.status(201).json({ status: "success", message: "Successfully add book", data: newBook });
 	} catch (error) {
 		return res.status(500).json({ status: "error", message: "Error adding book" });
 	}
@@ -94,8 +81,7 @@ export const updateBook = async (req: Request, res: Response): Promise<Response>
 	}
 
 	try {
-		const updatedBook = await Book.findByIdAndUpdate(bookId, { title, author, publishedDate, publisher, description, coverImage, rating, tags, initialQty, qty }, { new: true });
-
+		const updatedBook = await BookService.updateBook(bookId, { title, author, publishedDate, publisher, description, coverImage, rating, tags, initialQty, qty }); // panggil service
 		if (!updatedBook) {
 			return res.status(404).json({ status: "error", message: "Book not found" });
 		}
@@ -111,7 +97,7 @@ export const deleteBook = async (req: Request, res: Response): Promise<Response>
 	const { bookId } = req.params;
 
 	try {
-		const deletedBook = await Book.findByIdAndDelete(bookId);
+		const deletedBook = await BookService.deleteBook(bookId); // panggil service
 		if (!deletedBook) {
 			return res.status(404).json({ status: "failed", message: `Book with ID ${bookId} not found` });
 		}

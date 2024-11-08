@@ -19,5 +19,5 @@ export const updateBook = async (id: string, bookData: any) => {
 };
 
 export const deleteBook = async (id: string) => {
-	await Book.findByIdAndDelete(id);
+	return await Book.findByIdAndDelete(id);
 };
