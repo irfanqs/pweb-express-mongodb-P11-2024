@@ -17,7 +17,11 @@ app.use("/mechanism", mechanismRoutes);
 connectDB();
 
 app.get("/", (req, res) => {
-	res.send("Welcome to Express + MongoDB Atlas API!");
+	res.send({
+		status: "success",
+		message: "Hello World",
+		date: "Thu Nov 07 2024",
+	});
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
