@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 	res.send({
 		status: "success",
 		message: "Hello World",
-		date: "Thu Nov 07 2024",
+		date: { date: new Date() },
 	});
 });
 
